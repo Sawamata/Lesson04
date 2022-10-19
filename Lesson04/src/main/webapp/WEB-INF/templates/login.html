@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+         <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}">
+    <title>現場状況報告画面</title>
+    
+    <script src="http://localhost:8080/Lesson04/js/login.js?dateTime=20220921120047" ></script>
+
+    </head>
+    <body style="text-align: center;">
+             
+        <h1 class="m-3">現場状況報告画面</h1>
+        <hr>
+        
+    <form th:object="${loginForm}" th:action="@{/login}" method="post">
+    
+    
+        <div>
+    	<!--<p>社員ID： <input type="text" th:field="${loginForm.employeeId}" /></p>-->
+    	<p>社員ID： <input type="text" th:field="${loginForm.employeeId}" /></p>
+    	<p>パスワード： <input type="text" th:field="${loginForm.pass}" /></p>
+    	<!--<p><input type="text" th:field="${loginForm.message}" readonly="readonly" style="border: none;" /></p>-->
+        </div>
+        
+         
+         
+          <button type="button" class="btn btn-primary" id="loginBtn" name="loginBtn" onclick="login();">ログイン</button>
+         
+            <!-- エラーメッセージの一覧表示 -->
+            <p th:text="${msg}"></p>
+            <!-- <ul>
+                <li th:each="error : ${#fields.detailedErrors()}">
+                    <span th:text="${error.message}"></span>
+                </li>
+            </ul> -->
+    </form>
+    
+    </body>
+</html>
+
+
+<!--
+１）ログイン画面を作成し、画面中央上部にタイトルとして「現場状況報告画面」を表示する。						
+　画面中央中部に社員IDのテキストボックス、パスワードのテキストボックスを配置する。画面中央下部にログインボタンを配置する						
+２）社員IDのテキストボックスに社員IDを入力し、パスワードのテキストボックスにパスワードを入力し、ログインボタンを押下する						
+　　①ユーザーマスタに社員IDが存在し、削除フラグが「9：初期フラグ」の場合、パスワード変更画面に遷移する						
+　　②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する						
+　　③ユーザーマスタに社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「1：ロック済」の場合、ログインエラーメッセージを表示する						
+　　④ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、パスワードが一致しない場合、ログインエラーメッセージを表示する。						
+　　　またユーザーマスタのリトライ回数を＋1して更新する						
+　　　ユーザーマスタのリトライ回数が３になったら、ロックフラグを「1：ロック済」に更新する						
+　　⑤ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、パスワードが一致する場合、メニュー画面に遷移する。						
+　　　またユーザーマスタのリトライ回数を0に更新する						
++------------------+----------+------+-----+---------+-------+
+| Field            | Type     | Null | Key | Default | Extra |
++------------------+----------+------+-----+---------+-------+
+| EMPLOYEE_ID      | char(10) | NO   | PRI | NULL    |       |
+| PASSWORD         | text     | YES  |     | NULL    |       |
+| HASH_COUNT       | int(11)  | YES  |     | NULL    |       |
+| FONT_COLOR       | char(7)  | YES  |     | NULL    |       |
+| BACKGROUND_COLOR | char(7)  | YES  |     | NULL    |       |
+| USER_IMAGE       | text     | YES  |     | NULL    |       |
+| RETRY_COUNT      | int(11)  | YES  |     | NULL    |       |
+| LOCK_FLG         | char(1)  | YES  |     | NULL    |       |
+| DELETE_FLG       | char(1)  | YES  |     | NULL    |       |
++------------------+----------+------+-----+---------+-------+
+  -->

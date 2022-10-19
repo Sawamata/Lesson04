@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seiken_soft.dao.TRoomtalkMapper">
+  <resultMap id="BaseResultMap" type="com.seiken_soft.entity.TRoomtalk">
+    <id column="ROOM_NUMBER" jdbcType="CHAR" property="roomNumber" />
+    <id column="EMPLOYEE_ID" jdbcType="CHAR" property="employeeId" />
+    <id column="RENBAN" jdbcType="BIGINT" property="renban" />
+    <result column="FONT_COLOR" jdbcType="CHAR" property="fontColor" />
+    <result column="BACK_COLOR" jdbcType="CHAR" property="backColor" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.seiken_soft.entity.TRoomtalkWithBLOBs">
+    <result column="TALK" jdbcType="LONGVARCHAR" property="talk" />
+    <result column="TEMP_FILE" jdbcType="LONGVARCHAR" property="tempFile" />
+    <result column="IMAGE_FILE" jdbcType="LONGVARCHAR" property="imageFile" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ROOM_NUMBER, EMPLOYEE_ID, RENBAN, FONT_COLOR, BACK_COLOR
+  </sql>
+  <sql id="Blob_Column_List">
+    TALK, TEMP_FILE, IMAGE_FILE
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.seiken_soft.entity.TRoomtalkExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_roomtalk
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.seiken_soft.entity.TRoomtalkExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_roomtalk
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.seiken_soft.entity.TRoomtalkKey" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_roomtalk
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+      and RENBAN = #{renban,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.seiken_soft.entity.TRoomtalkKey">
+    delete from t_roomtalk
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+      and RENBAN = #{renban,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seiken_soft.entity.TRoomtalkExample">
+    delete from t_roomtalk
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seiken_soft.entity.TRoomtalkWithBLOBs">
+    insert into t_roomtalk (ROOM_NUMBER, EMPLOYEE_ID, RENBAN, 
+      FONT_COLOR, BACK_COLOR, TALK, 
+      TEMP_FILE, IMAGE_FILE)
+    values (#{roomNumber,jdbcType=CHAR}, #{employeeId,jdbcType=CHAR}, #{renban,jdbcType=BIGINT}, 
+      #{fontColor,jdbcType=CHAR}, #{backColor,jdbcType=CHAR}, #{talk,jdbcType=LONGVARCHAR}, 
+      #{tempFile,jdbcType=LONGVARCHAR}, #{imageFile,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seiken_soft.entity.TRoomtalkWithBLOBs">
+    insert into t_roomtalk
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomNumber != null">
+        ROOM_NUMBER,
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID,
+      </if>
+      <if test="renban != null">
+        RENBAN,
+      </if>
+      <if test="fontColor != null">
+        FONT_COLOR,
+      </if>
+      <if test="backColor != null">
+        BACK_COLOR,
+      </if>
+      <if test="talk != null">
+        TALK,
+      </if>
+      <if test="tempFile != null">
+        TEMP_FILE,
+      </if>
+      <if test="imageFile != null">
+        IMAGE_FILE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomNumber != null">
+        #{roomNumber,jdbcType=CHAR},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=CHAR},
+      </if>
+      <if test="renban != null">
+        #{renban,jdbcType=BIGINT},
+      </if>
+      <if test="fontColor != null">
+        #{fontColor,jdbcType=CHAR},
+      </if>
+      <if test="backColor != null">
+        #{backColor,jdbcType=CHAR},
+      </if>
+      <if test="talk != null">
+        #{talk,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tempFile != null">
+        #{tempFile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageFile != null">
+        #{imageFile,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seiken_soft.entity.TRoomtalkExample" resultType="java.lang.Long">
+    select count(*) from t_roomtalk
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_roomtalk
+    <set>
+      <if test="record.roomNumber != null">
+        ROOM_NUMBER = #{record.roomNumber,jdbcType=CHAR},
+      </if>
+      <if test="record.employeeId != null">
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      </if>
+      <if test="record.renban != null">
+        RENBAN = #{record.renban,jdbcType=BIGINT},
+      </if>
+      <if test="record.fontColor != null">
+        FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      </if>
+      <if test="record.backColor != null">
+        BACK_COLOR = #{record.backColor,jdbcType=CHAR},
+      </if>
+      <if test="record.talk != null">
+        TALK = #{record.talk,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.tempFile != null">
+        TEMP_FILE = #{record.tempFile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.imageFile != null">
+        IMAGE_FILE = #{record.imageFile,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update t_roomtalk
+    set ROOM_NUMBER = #{record.roomNumber,jdbcType=CHAR},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      RENBAN = #{record.renban,jdbcType=BIGINT},
+      FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      BACK_COLOR = #{record.backColor,jdbcType=CHAR},
+      TALK = #{record.talk,jdbcType=LONGVARCHAR},
+      TEMP_FILE = #{record.tempFile,jdbcType=LONGVARCHAR},
+      IMAGE_FILE = #{record.imageFile,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_roomtalk
+    set ROOM_NUMBER = #{record.roomNumber,jdbcType=CHAR},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      RENBAN = #{record.renban,jdbcType=BIGINT},
+      FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      BACK_COLOR = #{record.backColor,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seiken_soft.entity.TRoomtalkWithBLOBs">
+    update t_roomtalk
+    <set>
+      <if test="fontColor != null">
+        FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      </if>
+      <if test="backColor != null">
+        BACK_COLOR = #{backColor,jdbcType=CHAR},
+      </if>
+      <if test="talk != null">
+        TALK = #{talk,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tempFile != null">
+        TEMP_FILE = #{tempFile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageFile != null">
+        IMAGE_FILE = #{imageFile,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+      and RENBAN = #{renban,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.seiken_soft.entity.TRoomtalkWithBLOBs">
+    update t_roomtalk
+    set FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      BACK_COLOR = #{backColor,jdbcType=CHAR},
+      TALK = #{talk,jdbcType=LONGVARCHAR},
+      TEMP_FILE = #{tempFile,jdbcType=LONGVARCHAR},
+      IMAGE_FILE = #{imageFile,jdbcType=LONGVARCHAR}
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+      and RENBAN = #{renban,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seiken_soft.entity.TRoomtalk">
+    update t_roomtalk
+    set FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      BACK_COLOR = #{backColor,jdbcType=CHAR}
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+      and RENBAN = #{renban,jdbcType=BIGINT}
+  </update>
+</mapper>

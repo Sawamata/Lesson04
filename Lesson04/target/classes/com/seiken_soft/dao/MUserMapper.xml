@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seiken_soft.dao.MUserMapper">
+  <resultMap id="BaseResultMap" type="com.seiken_soft.entity.MUser">
+    <id column="EMPLOYEE_ID" jdbcType="CHAR" property="employeeId" />
+    <result column="HASH_COUNT" jdbcType="INTEGER" property="hashCount" />
+    <result column="FONT_COLOR" jdbcType="CHAR" property="fontColor" />
+    <result column="BACKGROUND_COLOR" jdbcType="CHAR" property="backgroundColor" />
+    <result column="RETRY_COUNT" jdbcType="INTEGER" property="retryCount" />
+    <result column="LOCK_FLG" jdbcType="CHAR" property="lockFlg" />
+    <result column="DELETE_FLG" jdbcType="CHAR" property="deleteFlg" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.seiken_soft.entity.MUserWithBLOBs">
+    <result column="PASSWORD" jdbcType="LONGVARCHAR" property="password" />
+    <result column="USER_IMAGE" jdbcType="LONGVARCHAR" property="userImage" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    EMPLOYEE_ID, HASH_COUNT, FONT_COLOR, BACKGROUND_COLOR, RETRY_COUNT, LOCK_FLG, DELETE_FLG
+  </sql>
+  <sql id="Blob_Column_List">
+    PASSWORD, USER_IMAGE
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.seiken_soft.entity.MUserExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from m_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.seiken_soft.entity.MUserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from m_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from m_user
+    where EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from m_user
+    where EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seiken_soft.entity.MUserExample">
+    delete from m_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seiken_soft.entity.MUserWithBLOBs">
+    insert into m_user (EMPLOYEE_ID, HASH_COUNT, FONT_COLOR, 
+      BACKGROUND_COLOR, RETRY_COUNT, LOCK_FLG, 
+      DELETE_FLG, PASSWORD, USER_IMAGE
+      )
+    values (#{employeeId,jdbcType=CHAR}, #{hashCount,jdbcType=INTEGER}, #{fontColor,jdbcType=CHAR}, 
+      #{backgroundColor,jdbcType=CHAR}, #{retryCount,jdbcType=INTEGER}, #{lockFlg,jdbcType=CHAR}, 
+      #{deleteFlg,jdbcType=CHAR}, #{password,jdbcType=LONGVARCHAR}, #{userImage,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seiken_soft.entity.MUserWithBLOBs">
+    insert into m_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="employeeId != null">
+        EMPLOYEE_ID,
+      </if>
+      <if test="hashCount != null">
+        HASH_COUNT,
+      </if>
+      <if test="fontColor != null">
+        FONT_COLOR,
+      </if>
+      <if test="backgroundColor != null">
+        BACKGROUND_COLOR,
+      </if>
+      <if test="retryCount != null">
+        RETRY_COUNT,
+      </if>
+      <if test="lockFlg != null">
+        LOCK_FLG,
+      </if>
+      <if test="deleteFlg != null">
+        DELETE_FLG,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="userImage != null">
+        USER_IMAGE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=CHAR},
+      </if>
+      <if test="hashCount != null">
+        #{hashCount,jdbcType=INTEGER},
+      </if>
+      <if test="fontColor != null">
+        #{fontColor,jdbcType=CHAR},
+      </if>
+      <if test="backgroundColor != null">
+        #{backgroundColor,jdbcType=CHAR},
+      </if>
+      <if test="retryCount != null">
+        #{retryCount,jdbcType=INTEGER},
+      </if>
+      <if test="lockFlg != null">
+        #{lockFlg,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlg != null">
+        #{deleteFlg,jdbcType=CHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userImage != null">
+        #{userImage,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seiken_soft.entity.MUserExample" resultType="java.lang.Long">
+    select count(*) from m_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update m_user
+    <set>
+      <if test="record.employeeId != null">
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      </if>
+      <if test="record.hashCount != null">
+        HASH_COUNT = #{record.hashCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.fontColor != null">
+        FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      </if>
+      <if test="record.backgroundColor != null">
+        BACKGROUND_COLOR = #{record.backgroundColor,jdbcType=CHAR},
+      </if>
+      <if test="record.retryCount != null">
+        RETRY_COUNT = #{record.retryCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.lockFlg != null">
+        LOCK_FLG = #{record.lockFlg,jdbcType=CHAR},
+      </if>
+      <if test="record.deleteFlg != null">
+        DELETE_FLG = #{record.deleteFlg,jdbcType=CHAR},
+      </if>
+      <if test="record.password != null">
+        PASSWORD = #{record.password,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.userImage != null">
+        USER_IMAGE = #{record.userImage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update m_user
+    set EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      HASH_COUNT = #{record.hashCount,jdbcType=INTEGER},
+      FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      BACKGROUND_COLOR = #{record.backgroundColor,jdbcType=CHAR},
+      RETRY_COUNT = #{record.retryCount,jdbcType=INTEGER},
+      LOCK_FLG = #{record.lockFlg,jdbcType=CHAR},
+      DELETE_FLG = #{record.deleteFlg,jdbcType=CHAR},
+      PASSWORD = #{record.password,jdbcType=LONGVARCHAR},
+      USER_IMAGE = #{record.userImage,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update m_user
+    set EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      HASH_COUNT = #{record.hashCount,jdbcType=INTEGER},
+      FONT_COLOR = #{record.fontColor,jdbcType=CHAR},
+      BACKGROUND_COLOR = #{record.backgroundColor,jdbcType=CHAR},
+      RETRY_COUNT = #{record.retryCount,jdbcType=INTEGER},
+      LOCK_FLG = #{record.lockFlg,jdbcType=CHAR},
+      DELETE_FLG = #{record.deleteFlg,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seiken_soft.entity.MUserWithBLOBs">
+    update m_user
+    <set>
+      <if test="hashCount != null">
+        HASH_COUNT = #{hashCount,jdbcType=INTEGER},
+      </if>
+      <if test="fontColor != null">
+        FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      </if>
+      <if test="backgroundColor != null">
+        BACKGROUND_COLOR = #{backgroundColor,jdbcType=CHAR},
+      </if>
+      <if test="retryCount != null">
+        RETRY_COUNT = #{retryCount,jdbcType=INTEGER},
+      </if>
+      <if test="lockFlg != null">
+        LOCK_FLG = #{lockFlg,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlg != null">
+        DELETE_FLG = #{deleteFlg,jdbcType=CHAR},
+      </if>
+      <if test="password != null">
+        PASSWORD = #{password,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userImage != null">
+        USER_IMAGE = #{userImage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.seiken_soft.entity.MUserWithBLOBs">
+    update m_user
+    set HASH_COUNT = #{hashCount,jdbcType=INTEGER},
+      FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      BACKGROUND_COLOR = #{backgroundColor,jdbcType=CHAR},
+      RETRY_COUNT = #{retryCount,jdbcType=INTEGER},
+      LOCK_FLG = #{lockFlg,jdbcType=CHAR},
+      DELETE_FLG = #{deleteFlg,jdbcType=CHAR},
+      PASSWORD = #{password,jdbcType=LONGVARCHAR},
+      USER_IMAGE = #{userImage,jdbcType=LONGVARCHAR}
+    where EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seiken_soft.entity.MUser">
+    update m_user
+    set HASH_COUNT = #{hashCount,jdbcType=INTEGER},
+      FONT_COLOR = #{fontColor,jdbcType=CHAR},
+      BACKGROUND_COLOR = #{backgroundColor,jdbcType=CHAR},
+      RETRY_COUNT = #{retryCount,jdbcType=INTEGER},
+      LOCK_FLG = #{lockFlg,jdbcType=CHAR},
+      DELETE_FLG = #{deleteFlg,jdbcType=CHAR}
+    where EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </update>
+</mapper>

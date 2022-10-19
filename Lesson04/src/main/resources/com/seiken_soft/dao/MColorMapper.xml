@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seiken_soft.dao.MColorMapper">
+  <resultMap id="BaseResultMap" type="com.seiken_soft.entity.MColor">
+    <id column="COLOR_CD" jdbcType="CHAR" property="colorCd" />
+    <result column="COLOR_NAME" jdbcType="VARCHAR" property="colorName" />
+    <result column="COLOR_VALUE" jdbcType="CHAR" property="colorValue" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    COLOR_CD, COLOR_NAME, COLOR_VALUE
+  </sql>
+  <select id="selectByExample" parameterType="com.seiken_soft.entity.MColorExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from m_color
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from m_color
+    where COLOR_CD = #{colorCd,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from m_color
+    where COLOR_CD = #{colorCd,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seiken_soft.entity.MColorExample">
+    delete from m_color
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seiken_soft.entity.MColor">
+    insert into m_color (COLOR_CD, COLOR_NAME, COLOR_VALUE
+      )
+    values (#{colorCd,jdbcType=CHAR}, #{colorName,jdbcType=VARCHAR}, #{colorValue,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seiken_soft.entity.MColor">
+    insert into m_color
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="colorCd != null">
+        COLOR_CD,
+      </if>
+      <if test="colorName != null">
+        COLOR_NAME,
+      </if>
+      <if test="colorValue != null">
+        COLOR_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="colorCd != null">
+        #{colorCd,jdbcType=CHAR},
+      </if>
+      <if test="colorName != null">
+        #{colorName,jdbcType=VARCHAR},
+      </if>
+      <if test="colorValue != null">
+        #{colorValue,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seiken_soft.entity.MColorExample" resultType="java.lang.Long">
+    select count(*) from m_color
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update m_color
+    <set>
+      <if test="record.colorCd != null">
+        COLOR_CD = #{record.colorCd,jdbcType=CHAR},
+      </if>
+      <if test="record.colorName != null">
+        COLOR_NAME = #{record.colorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.colorValue != null">
+        COLOR_VALUE = #{record.colorValue,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update m_color
+    set COLOR_CD = #{record.colorCd,jdbcType=CHAR},
+      COLOR_NAME = #{record.colorName,jdbcType=VARCHAR},
+      COLOR_VALUE = #{record.colorValue,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seiken_soft.entity.MColor">
+    update m_color
+    <set>
+      <if test="colorName != null">
+        COLOR_NAME = #{colorName,jdbcType=VARCHAR},
+      </if>
+      <if test="colorValue != null">
+        COLOR_VALUE = #{colorValue,jdbcType=CHAR},
+      </if>
+    </set>
+    where COLOR_CD = #{colorCd,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seiken_soft.entity.MColor">
+    update m_color
+    set COLOR_NAME = #{colorName,jdbcType=VARCHAR},
+      COLOR_VALUE = #{colorValue,jdbcType=CHAR}
+    where COLOR_CD = #{colorCd,jdbcType=CHAR}
+  </update>
+</mapper>

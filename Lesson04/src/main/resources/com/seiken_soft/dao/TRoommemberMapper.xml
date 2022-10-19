@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seiken_soft.dao.TRoommemberMapper">
+  <resultMap id="BaseResultMap" type="com.seiken_soft.entity.TRoommember">
+    <id column="ROOM_NUMBER" jdbcType="CHAR" property="roomNumber" />
+    <id column="EMPLOYEE_ID" jdbcType="CHAR" property="employeeId" />
+    <result column="EMPLOYEE_NAME" jdbcType="VARCHAR" property="employeeName" />
+    <result column="CHECK_IN_FLG" jdbcType="CHAR" property="checkInFlg" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ROOM_NUMBER, EMPLOYEE_ID, EMPLOYEE_NAME, CHECK_IN_FLG
+  </sql>
+  <select id="selectByExample" parameterType="com.seiken_soft.entity.TRoommemberExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_roommember
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.seiken_soft.entity.TRoommemberKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_roommember
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.seiken_soft.entity.TRoommemberKey">
+    delete from t_roommember
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seiken_soft.entity.TRoommemberExample">
+    delete from t_roommember
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seiken_soft.entity.TRoommember">
+    insert into t_roommember (ROOM_NUMBER, EMPLOYEE_ID, EMPLOYEE_NAME, 
+      CHECK_IN_FLG)
+    values (#{roomNumber,jdbcType=CHAR}, #{employeeId,jdbcType=CHAR}, #{employeeName,jdbcType=VARCHAR}, 
+      #{checkInFlg,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seiken_soft.entity.TRoommember">
+    insert into t_roommember
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomNumber != null">
+        ROOM_NUMBER,
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID,
+      </if>
+      <if test="employeeName != null">
+        EMPLOYEE_NAME,
+      </if>
+      <if test="checkInFlg != null">
+        CHECK_IN_FLG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomNumber != null">
+        #{roomNumber,jdbcType=CHAR},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=CHAR},
+      </if>
+      <if test="employeeName != null">
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInFlg != null">
+        #{checkInFlg,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seiken_soft.entity.TRoommemberExample" resultType="java.lang.Long">
+    select count(*) from t_roommember
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_roommember
+    <set>
+      <if test="record.roomNumber != null">
+        ROOM_NUMBER = #{record.roomNumber,jdbcType=CHAR},
+      </if>
+      <if test="record.employeeId != null">
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      </if>
+      <if test="record.employeeName != null">
+        EMPLOYEE_NAME = #{record.employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkInFlg != null">
+        CHECK_IN_FLG = #{record.checkInFlg,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_roommember
+    set ROOM_NUMBER = #{record.roomNumber,jdbcType=CHAR},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=CHAR},
+      EMPLOYEE_NAME = #{record.employeeName,jdbcType=VARCHAR},
+      CHECK_IN_FLG = #{record.checkInFlg,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seiken_soft.entity.TRoommember">
+    update t_roommember
+    <set>
+      <if test="employeeName != null">
+        EMPLOYEE_NAME = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInFlg != null">
+        CHECK_IN_FLG = #{checkInFlg,jdbcType=CHAR},
+      </if>
+    </set>
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seiken_soft.entity.TRoommember">
+    update t_roommember
+    set EMPLOYEE_NAME = #{employeeName,jdbcType=VARCHAR},
+      CHECK_IN_FLG = #{checkInFlg,jdbcType=CHAR}
+    where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
+      and EMPLOYEE_ID = #{employeeId,jdbcType=CHAR}
+  </update>
+</mapper>
