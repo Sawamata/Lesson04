@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.seiken_soft.dao.MEmployeeMapper;
 import com.seiken_soft.dao.MUserMapper;
 import com.seiken_soft.entity.MEmployee;
-import com.seiken_soft.entity.MUser;
 import com.seiken_soft.entity.MUserWithBLOBs;
 import com.seiken_soft.model.LoginModel;
 
@@ -84,10 +83,22 @@ public class LoginModelImpl implements LoginModel {
 
 		return values;
 	}
-public MUser retryPlus(String employeeId) {
+	public int retryPlus (String employeeId) {
 
-	// 社員情報を取得
-	MUser mUser = userInfo.selectByPrimaryKey(employeeId);
-	return mUser;
-}
+		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);
+		int retryCount = mUserInfo.getRetryCount();
+
+//		// リトライ回数を＋1
+		retryCount = retryCount + 1;
+		
+		System.out.println(retryCount);
+
+//		// DBアップデート
+		mUserInfo.setRetryCount(retryCount);
+//		mUserInfo.retryCount = retryCount + 1;		
+		userInfo.updateByPrimaryKey(mUserInfo);
+
+		return retryCount;
+	}
+
 }

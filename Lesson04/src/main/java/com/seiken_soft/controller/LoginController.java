@@ -146,38 +146,56 @@ public class LoginController {
 //		String inPass = form.getPass ();
 		
 
-			if (deleteFlg.equals("9")) {
+		if (deleteFlg.equals("9")) {
 //				ユーザーマスタに社員IDが存在し、削除フラグが「9：初期フラグ」の場合、パスワード変更画面に遷移する
-				mav.setViewName("changePassword");
-			} else if (deleteFlg.equals("1")) {
+			mav.setViewName("changePassword");
+		} else if (deleteFlg.equals("1")) {
 //				②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する
-//				mav.addObject("message", "削除済みです");
-				
-			} else if (deleteFlg.equals("0")) {
-				if (lockFlg.equals("1")) {
+	        mav.addObject("msg", "ユーザー削除済みです。システム担当部署へご確認ください");
+			mav.addObject("loginForm", form);
+			mav.setViewName("login");
+			return mav;
+			
+		} else if (deleteFlg.equals("0")) {
+			if (lockFlg.equals("1")) {
 //					③ユーザーマスタに社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが
 //					「1：ロック済」の場合、ログインエラーメッセージを表示する
-				} else if (lockFlg.equals("0")) {
+		        mav.addObject("msg", "アカウントがロックされています。システム担当部署へご確認ください");
+				mav.addObject("loginForm", form);
+				mav.setViewName("login");
+				return mav;
+			} else if (lockFlg.equals("0")) {
 //					ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、
-					
-					if (!inputPass.equals(password)) {
+				
+				if (!inputPass.equals(password)) {
 //						パスワードが一致しない場合、ログインエラーメッセージを表示する。	
 //						　　　またユーザーマスタのリトライ回数を＋1して更新する						
+			        mav.addObject("msg", "社員IDまたはパスワードが間違っています");
+					mav.addObject("loginForm", form);
+					mav.setViewName("login");
+
+					int retryCount = loginModel.retryPlus(employeeId);
+					
+					if (retryCount >= 3) {
 //						　　　ユーザーマスタのリトライ回数が３になったら、ロックフラグを「1：ロック済」に更新する
 						
-											
-					} else if(inputPass.equals(password)) {
+					}
+					
+					return mav;
+					
+										
+				} else if(inputPass.equals(password)) {
 //						⑤ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、
 //						パスワードが一致する場合、メニュー画面に遷移する。						
 //						　　　またユーザーマスタのリトライ回数を0に更新する	
 
-						mav.setViewName("menu");
-					}
-					
+					mav.setViewName("menu");
 				}
-//			②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する
+				
 			}
-			
+//			②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する
+		}
+		
 
 
 		// タイムスタンプのセット
