@@ -12,11 +12,6 @@ public class LoginForm {
 	
 	/** 社員ID */
 	private String employeeId;
-
-	// 削除フラグ
-//	private String del_Flg;
-	// ロックフラグ
-//	private String lock_Flg;
 	// パスワード
 	private String pass;
 

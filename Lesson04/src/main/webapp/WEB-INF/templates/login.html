@@ -28,7 +28,7 @@
           <button type="button" class="btn btn-primary" id="loginBtn" name="loginBtn" onclick="login();">ログイン</button>
          
             <!-- エラーメッセージの一覧表示 -->
-            <p th:text="${msg}"></p>
+            <p class="text-danger mt-2" th:text="${msg}"></p>
             <!-- <ul>
                 <li th:each="error : ${#fields.detailedErrors()}">
                     <span th:text="${error.message}"></span>

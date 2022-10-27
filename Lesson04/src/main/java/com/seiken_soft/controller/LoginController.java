@@ -147,10 +147,18 @@ public class LoginController {
 		
 
 		if (deleteFlg.equals("9")) {
-//				ユーザーマスタに社員IDが存在し、削除フラグが「9：初期フラグ」の場合、パスワード変更画面に遷移する
+//				ユーザーマスタに社員IDが存在し、削除フラグが「9：初期フラグ」の場合、パスワード変更画面に遷移する 9999999999
+//			初めてログインするひと
+			mav.addObject("loginForm", form);
 			mav.setViewName("changePassword");
+	        mav.addObject("password");
+
+//			２回目以降はパスワード変更する必要がないので、削除フラグを0にする
+			loginModel.delFlgZero(employeeId);
+			
+			return mav;
 		} else if (deleteFlg.equals("1")) {
-//				②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する
+//				②ユーザーマスタに社員IDが存在し、削除フラグが「1：削除済」の場合、ログインエラーメッセージを表示する 1111111111
 	        mav.addObject("msg", "ユーザー削除済みです。システム担当部署へご確認ください");
 			mav.addObject("loginForm", form);
 			mav.setViewName("login");
@@ -159,13 +167,13 @@ public class LoginController {
 		} else if (deleteFlg.equals("0")) {
 			if (lockFlg.equals("1")) {
 //					③ユーザーマスタに社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが
-//					「1：ロック済」の場合、ログインエラーメッセージを表示する
+//					「1：ロック済」の場合、ログインエラーメッセージを表示する 1010101010
 		        mav.addObject("msg", "アカウントがロックされています。システム担当部署へご確認ください");
 				mav.addObject("loginForm", form);
 				mav.setViewName("login");
 				return mav;
 			} else if (lockFlg.equals("0")) {
-//					ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、
+//					ユーザーマスタの社員IDが存在し、削除フラグが「0：未削除」の場合、かつロックフラグが「０：未ロック」の場合かつ、1234567891
 				
 				if (!inputPass.equals(password)) {
 //						パスワードが一致しない場合、ログインエラーメッセージを表示する。	
@@ -178,6 +186,7 @@ public class LoginController {
 					
 					if (retryCount >= 3) {
 //						　　　ユーザーマスタのリトライ回数が３になったら、ロックフラグを「1：ロック済」に更新する
+						loginModel.userLock(employeeId);
 						
 					}
 					
@@ -189,7 +198,9 @@ public class LoginController {
 //						パスワードが一致する場合、メニュー画面に遷移する。						
 //						　　　またユーザーマスタのリトライ回数を0に更新する	
 
+					mav.addObject("loginForm", form);
 					mav.setViewName("menu");
+					return mav;
 				}
 				
 			}

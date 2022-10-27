@@ -7,39 +7,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.seiken_soft.dao.MEmployeeMapper;
 import com.seiken_soft.dao.MUserMapper;
-import com.seiken_soft.entity.MEmployee;
 import com.seiken_soft.entity.MUserWithBLOBs;
-import com.seiken_soft.model.LoginModel;
+import com.seiken_soft.model.ChangePasswordModel;
 
 @Transactional
 @Service
-public class LoginModelImpl implements LoginModel {
+public class ChangePasswordModelImpl implements ChangePasswordModel {
 	
-	/** 　⇒パッケージ名を「com.seiken_soft.model」とし、インターフェース名を「LoginModel」（ログイン画面用のモデルインターフェース）とする
-	　⇒パッケージ名を「com.seiken_soft.model.impl」とし、クラス名を「LoginModelImpl」（ログイン画面用のモデル）とする
-	　　※実装するメソッド名、変数名は任意だが、見て用途がわかる名前にすること
-	　　　ただし、「LoginModelImpl」クラスでSQLの実行結果を返却するところまでを行う
-	　　　⇒DB接続はフレームワーク側で行うため実装しない。
-	　　　　またSQLはMyBatisを使用するためｘｍｌに記載するため実装しない。ただしテーブル結合を行うようなSQLを作成する場合は「Login.xml」の名前でxml形式で作成する。
-	　　　beanクラスを作成してもよい。ただしパッケージは分けること
-	
-	３）正しい社員IDと正しいパスワードを入力し、ログインボタンを押下した場合に、
-	その社員IDでログインするのが初めての場合はパスワード変更画面が表示されることを確認する
-４）正しい社員IDと正しいパスワードを入力し、ログインボタンを押下した場合に、
-その社員IDでログインするのが2回目以降の場合はメニュー画面が表示されることを確認する
+	/** 　２）現パスワードのテキストボックスに現在のパスワードを入力し、新パスワードのテキストボックスに新しいパスワードを入力して、
+　新パスワード（確認）のテキストボックスに新しいパスワードを入力し、ハッシュ化回数のテキストボックスに数値を入力し、変更ボタンを押下する
+　　①ユーザーマスタを社員IDで検索しデータを取得する。そのデータの削除フラグが「9：初期フラグ」の場合
+　　　　a）新パスワードと新パスワード（確認）の内容が一致しない場合はエラーメッセージを表示する
+　　　　b）ハッシュ化回数が数値でない場合はエラーメッセージを表示する
+　　②ユーザーマスタを社員IDで検索しデータを取得する。そのデータの削除フラグが「0：未削除」の場合
+　　　　a）取得したパスワードと現パスワードの内容が一致しない場合はエラーメッセージを表示する
+　　　　b）現パスワードと新パスワードの内容が一致する場合はエラーメッセージを表示する
+　　　　c）新パスワードと新パスワード（確認）の内容が一致しない場合はエラーメッセージを表示する
+　　　　d）ハッシュ化回数が数値でない場合はエラーメッセージを表示する
+　　　　e）パスワード履歴テーブルを社員IDで検索し、パスワードのリストを取得する。パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する
+３）　２）①と２）②でエラーとならなかった場合、新パスワードの内容をハッシュ化回数分だけハッシュ化し、ユーザーマスタのパスワードを更新する。
+　　　その際、削除フラグが「9：初期フラグ」の場合は削除フラグを「0：未削除」に更新する
+　　　またパスワード履歴テーブルに社員ID、連番＋１の値、ハッシュ化した新パスワードで登録する。
+４）メニュー画面を作成し、ルーム作成ボタン、ルーム一覧ボタン、パスワード変更ボタンを配置する
 
-
-	社員ID
-	パスワードをマスターからとってくる
 	
 	*/
 
 
 	/** MEmployeeマッパー */
-	@Autowired
-	private MEmployeeMapper employeeInfo;
+//	@Autowired
+//	private MEmployeeMapper employeeInfo;
 
 
 	/** MUserマッパー */
@@ -55,13 +53,6 @@ public class LoginModelImpl implements LoginModel {
 	 * @param password パスワード
 	 * @return 社員情報
 	 */
-	@Override
-	public MEmployee existMember(String employeeId) {
-
-		// 社員情報を取得
-		MEmployee employee = employeeInfo.selectByPrimaryKey(employeeId);
-		return employee;
-	}
 	
 	public List<String> mUser (String employeeId) {
 
