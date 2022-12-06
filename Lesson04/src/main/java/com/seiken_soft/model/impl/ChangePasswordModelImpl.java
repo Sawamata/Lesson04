@@ -1,13 +1,12 @@
 package com.seiken_soft.model.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.seiken_soft.dao.MEmployeeMapper;
 import com.seiken_soft.dao.MUserMapper;
+import com.seiken_soft.dao.TPasswordHistoryMapper;
 import com.seiken_soft.entity.MUserWithBLOBs;
 import com.seiken_soft.model.ChangePasswordModel;
 
@@ -36,93 +35,69 @@ public class ChangePasswordModelImpl implements ChangePasswordModel {
 
 
 	/** MEmployeeマッパー */
-//	@Autowired
-//	private MEmployeeMapper employeeInfo;
+	@Autowired
+	private MEmployeeMapper employeeInfo;
 
 
 	/** MUserマッパー */
 	@Autowired
 	private MUserMapper userInfo;
+	
+	/** TPasswordHistoryマッパー */
+	@Autowired
+	private TPasswordHistoryMapper tPassHistory;
+
+	
 
 	/**
-	 * 社員存在チェック
+	 * 削除フラグ取得
 	 * 
 	 * @param employeeId 社員ID
-	 * @param deleteFlg 削除フラグ
-	 * @param lockFlg ロックフラグ
-	 * @param password パスワード
-	 * @return 社員情報
+	 * @return 削除フラグ
 	 */
-	
-	public List<String> mUser (String employeeId) {
+	public String getDelFlg (String employeeId) {
 
 		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);
 
 //		// 削除フラグを取得
 		String del_Flg = mUserInfo.getDeleteFlg();
-//		// ロックフラグを取得
-		String lock_Flg = mUserInfo.getLockFlg();
-//
-//		// パスワードを取得
-		String Pass = mUserInfo.getPassword();
 
-		List<String> values = new ArrayList<>();
-		
-		values.add(del_Flg);
-		values.add(lock_Flg);
-		values.add(Pass);
-
-		return values;
+		return del_Flg;
 	}
-	public int retryPlus (String employeeId) {
+	
+	/**
+	 * 現パスワード取得
+	 * 
+	 * @param employeeId 社員ID
+	 * @return 現パスワード
+	 */
+	public String getCurrentPass (String employeeId) {
 
 		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);
-		int retryCount = mUserInfo.getRetryCount();
 
-//		// リトライ回数を＋1
-		retryCount = retryCount + 1;
-		
-		System.out.println(retryCount);
+//		// 現パスワードを取得
+		String currentPass = mUserInfo.getPassword();
 
-//		// DBアップデート
-		mUserInfo.setRetryCount(retryCount);
-//		mUserInfo.retryCount = retryCount + 1;		
-		userInfo.updateByPrimaryKey(mUserInfo);
-
-		return retryCount;
+		return currentPass;
 	}
-	public void userLock (String employeeId) {
-
-		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
-
-//		// DBアップデート
-//		// ロックフラグを1（ロック済み）にする
-		mUserInfo.setLockFlg("1");
-//		mUserInfo.retryCount = retryCount + 1;		
-		userInfo.updateByPrimaryKey(mUserInfo);
-
-	}
-	public void userUnlock (String employeeId) {
-
-		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
-
-//		// DBアップデート
-//		// ロックフラグを0（未ロック）にする
-		mUserInfo.setLockFlg("0");
-//		mUserInfo.retryCount = retryCount + 1;		
-		userInfo.updateByPrimaryKey(mUserInfo);
-
-	}
-	public void delFlgZero (String employeeId) {
-
-		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
-
-//		// DBアップデート
-//		// 削除フラグを0（未ロック）にする
-		mUserInfo.setDeleteFlg("0");
-//		mUserInfo.retryCount = retryCount + 1;		
-		userInfo.updateByPrimaryKey(mUserInfo);
-
-	}
+	
+	/**
+	 * パスワードリストチェック
+	 * 
+	 * @param employeeId 社員ID
+	 * @return 過去に使用されたことのあるパスワードかどうか
+	 */
+	/**a）
+　　　　e）パスワード履歴テーブルを社員IDで検索し、パスワードのリストを取得する。
+パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する	 */
+//	public String checkPassHistory (String employeeId) {
+//
+//		TPasswordHistory tPasswordHistory = tPassHistory.selectByPrimaryKey(employeeId);
+//
+////		// 現パスワードを取得
+//		String currentPass = mUserInfo.getPassword();
+//
+//		return currentPass;
+//	}
 
 }

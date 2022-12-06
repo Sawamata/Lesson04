@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.seiken_soft.entity.MEmployee;
+import com.seiken_soft.form.ChangePasswordForm;
 import com.seiken_soft.form.LoginForm;
 import com.seiken_soft.model.impl.LoginModelImpl;
 
@@ -149,9 +150,43 @@ public class LoginController {
 		if (deleteFlg.equals("9")) {
 //				ユーザーマスタに社員IDが存在し、削除フラグが「9：初期フラグ」の場合、パスワード変更画面に遷移する 9999999999
 //			初めてログインするひと
-			mav.addObject("loginForm", form);
+			
+
+
+			// 勤怠画面フォームのインスタンスを生成
+			ChangePasswordForm changePasswordForm = new ChangePasswordForm();
+			
+			// 画面初期表示null回避用		
+			/** 社員ID */
+//			String employeeId= "";
+			// 新パスワード
+			String currentPass = "";
+			// 新パスワード
+			String newPass = "";
+			// 新パスワード（確認）
+			String newPassKknn = "";
+			// ハッシュ化回数
+			int HashCount = 0;
+
+
+			// 初期値は空欄を表示	99999の削除フラグ9にもどしてためすこと！
+			changePasswordForm.setEmployeeId(employeeId);
+
+			changePasswordForm.setCurrentPass(currentPass);
+
+			changePasswordForm.setNewPass(newPass);
+
+			changePasswordForm.setNewPassKknn(newPassKknn);
+
+			changePasswordForm.setHashCount(HashCount);
+			
+			mav.addObject("changePasswordForm", changePasswordForm);
+			
+			
+			
+//			mav.addObject("loginForm", form);
 			mav.setViewName("changePassword");
-	        mav.addObject("password");
+//	        mav.addObject("password");
 
 //			２回目以降はパスワード変更する必要がないので、削除フラグを0にする
 			loginModel.delFlgZero(employeeId);

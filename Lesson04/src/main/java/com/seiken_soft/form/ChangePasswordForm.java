@@ -12,6 +12,8 @@ public class ChangePasswordForm {
 	
 	/** 社員ID */
 	private String employeeId;
+	// 現パスワード
+	private String currentPass;
 	// 新パスワード
 	private String newPass;
 	// 新パスワード（確認）
@@ -33,6 +35,20 @@ public class ChangePasswordForm {
 	 */
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	/**
+	 * @return currentPass
+	 */
+	public String getCurrentPass() {
+		return currentPass;
+	}
+
+	/**
+	 * @param currentPass セットする currentPass
+	 */
+	public void setCurrentPass(String currentPass) {
+		this.currentPass = currentPass;
 	}
 
 	/**

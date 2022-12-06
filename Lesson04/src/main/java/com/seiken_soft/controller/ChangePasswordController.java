@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.seiken_soft.form.ChangePasswordForm;
-import com.seiken_soft.form.LoginForm;
 import com.seiken_soft.model.impl.ChangePasswordModelImpl;
 
 /**
@@ -26,7 +25,6 @@ public class ChangePasswordController {
 	@Qualifier("changePasswordModelImpl")
 
 	private ChangePasswordModelImpl changePasswordModel;
-//	private LoginModel loginl;
 
 	/**
 	 * 初期表示
@@ -71,7 +69,7 @@ public class ChangePasswordController {
 +-------------+------------+------------+------------+------------------+------------+-------------+----------+------------+
 
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public ModelAndView init(ModelAndView mav) {
 
 
@@ -79,54 +77,119 @@ public class ChangePasswordController {
 		// 勤怠画面フォームのインスタンスを生成
 		ChangePasswordForm changePasswordForm = new ChangePasswordForm();
 		
-		// 画面初期表示null回避用
-		String eId = "";
-		String pass = "";
-		String eId = "";
-		String pass = "";
+		// 画面初期表示null回避用		
+		/** 社員ID */
+		String employeeId= "";
+		// 新パスワード
+		String currentPass = "";
+		// 新パスワード
+		String newPass = "";
+		// 新パスワード（確認）
+		String newPassKknn = "";
+		// ハッシュ化回数
+		int HashCount = 0;
 
-		loginForm.setEmployeeId(eId);
 
-		loginForm.setPass(pass);
+		// 初期値は空欄を表示	99999の削除フラグ9にもどしてためすこと！
+		changePasswordForm.setEmployeeId(employeeId);
+
+		changePasswordForm.setCurrentPass(currentPass);
+
+		changePasswordForm.setNewPass(newPass);
+
+		changePasswordForm.setNewPassKknn(newPassKknn);
+
+		changePasswordForm.setHashCount(HashCount);
 		
-		mav.addObject("loginForm", loginForm);
-		mav.setViewName("login");
+		mav.addObject("changePasswordForm", changePasswordForm);
+		mav.setViewName("changePassword");
 		return mav;
 	}
-
 	/**
 	 * ログインボタン押下時
 	 * @return mav 画面
 	 */
-	@RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
-	public ModelAndView loginCheck(LoginForm form, ModelAndView mav) {
-		
+	@RequestMapping(value = "/passCheck", method = RequestMethod.POST)
+	public ModelAndView passCheck(ChangePasswordForm form, ModelAndView mav) {
+
 
 		// 社員ID
 		String employeeId = form.getEmployeeId();
+		// 旧パスワード
+		String currentPass = form.getCurrentPass();
+		// 新パスワード
+		String newPass = form.getNewPass();
+		// 新パスワード（確認）
+		String newPassKknn = form.getNewPassKknn();
+		// ハッシュ化回数
+		int HashCount = form.getHashCount();
+		
+//		①aと②c新パスワードと新パスワード（確認）の内容が一致しない場合はエラーメッセージを表示する
+		if (!newPass.equals(newPassKknn)) {			
+	        mav.addObject("msg", "新パスワードと新パスワード（確認）の内容が違います。");
+			mav.addObject("changePasswordForm", form);
+			mav.setViewName("changePassword");
+			return mav;
+		}
 
-		// 画面入力したパスワード
-		String inputPass = form.getPass();
+		// 社員IDで検索し削除フラグを取得する
+		String delFlg = changePasswordModel.getDelFlg(employeeId);
+		// 社員IDで検索し現パスワードを取得する
+		String dbCurrentPass = changePasswordModel.getCurrentPass(employeeId);
 
-		// 社員の存在チェック
-////		MEmployee employee = changePasswordModel.existMember(employeeId);
-//		if (employee == null) {
-////			社員IDが存在しませんと表示させる
-//	        mav.addObject("msg", "社員IDが存在しません");
-//			mav.addObject("loginForm", form);
-//			mav.setViewName("login");
-//			return mav;
-//		}
+		// パスワード変更可否フラグ
+		boolean changeFlg = false;
+		
+
+		if (delFlg.equals("9")) {
+			
+				changeFlg = true;
+			
+		} else if (delFlg.equals("0")) {
+
+			if (!dbCurrentPass.equals(currentPass)) {
+//				a取得したパスワードと現パスワードの内容が一致しない場合はエラーメッセージを表示する
+		        mav.addObject("msg", "現パスワードが間違っています。");
+				mav.addObject("changePasswordForm", form);
+				mav.setViewName("changePassword");
+				return mav;
+			} else if (newPass.equals(currentPass)) {
+//				b現パスワードと新パスワードの内容が一致する場合はエラーメッセージを表示する
+		        mav.addObject("msg", "新パスワードは、すでに現パスワードとして使用されています。");
+				mav.addObject("changePasswordForm", form);
+				mav.setViewName("changePassword");
+				return mav;
+				
+			} else {
+			
+				changeFlg = true;
+				
+			}
+			
+			
+			/**a）
+		　　　　e）パスワード履歴テーブルを社員IDで検索し、パスワードのリストを取得する。
+		パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する	 */
+			
+			
+			
+//			
+//		        mav.addObject("msg", "アカウントがロックされています。システム担当部署へご確認ください");
+//				mav.addObject("loginForm", form);
+//				mav.setViewName("login");
+//				return mav;
+		}
 		
 
 
 		// タイムスタンプのセット
 //		mav.addObject("strDateTime", strDateTime);
 
-		mav.addObject("loginForm", form);
-		mav.setViewName("login");
+			mav.addObject("changePasswordForm", form);
+			mav.setViewName("changePassword");
 		return mav;
 
 	}
+
 
 }
