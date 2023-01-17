@@ -122,16 +122,16 @@ public class LoginModelImpl implements LoginModel {
 		userInfo.updateByPrimaryKey(mUserInfo);
 
 	}
-	public void delFlgZero (String employeeId) {
-
-		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
-
-//		// DBアップデート
-//		// 削除フラグを0（未ロック）にする
-		mUserInfo.setDeleteFlg("0");
-//		mUserInfo.retryCount = retryCount + 1;		
-		userInfo.updateByPrimaryKey(mUserInfo);
-
-	}
+//	public void delFlgZero (String employeeId) {
+//
+//		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
+//
+////		// DBアップデート
+////		// 削除フラグを0（未ロック）にする
+//		mUserInfo.setDeleteFlg("0");
+////		mUserInfo.retryCount = retryCount + 1;		
+//		userInfo.updateByPrimaryKey(mUserInfo);
+//
+//	}
 
 }

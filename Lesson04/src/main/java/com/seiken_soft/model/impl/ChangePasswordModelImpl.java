@@ -1,5 +1,8 @@
 package com.seiken_soft.model.impl;
 
+import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +11,8 @@ import com.seiken_soft.dao.MEmployeeMapper;
 import com.seiken_soft.dao.MUserMapper;
 import com.seiken_soft.dao.TPasswordHistoryMapper;
 import com.seiken_soft.entity.MUserWithBLOBs;
+import com.seiken_soft.entity.TPasswordHistoryExample;
+import com.seiken_soft.entity.TPasswordHistoryExample.Criteria;
 import com.seiken_soft.model.ChangePasswordModel;
 
 @Transactional
@@ -80,6 +85,46 @@ public class ChangePasswordModelImpl implements ChangePasswordModel {
 
 		return currentPass;
 	}
+
+	/**
+	 * ハッシュ化回数分文字列をハッシュ化
+	 * 
+	 * @param str 文字列
+	 * @param hashCount 文字列
+	 * @return ハッシュ化した文字列
+	 */
+	public String getHashStr (String str, int hashCount) {
+
+//		String reStr = DigestUtils.sha256Hex(str);
+		String reStr = str;
+//		 reStr = DigestUtils.md5Hex(str);
+		
+		System.out.println(str); 
+
+		for (int i = 0; i < hashCount; i++) {
+			 reStr = DigestUtils.md5Hex(reStr);
+			
+			}
+
+		
+
+		return reStr;
+	}
+	
+	
+
+//	// 削除フラグを0（未ロック）にする
+	public void delFlgZero (String employeeId) {
+
+		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
+
+//		// DBアップデート
+//		// 削除フラグを0（未ロック）にする
+		mUserInfo.setDeleteFlg("0");
+//		mUserInfo.retryCount = retryCount + 1;		
+		userInfo.updateByPrimaryKey(mUserInfo);
+
+	}
 	
 	/**
 	 * パスワードリストチェック
@@ -89,15 +134,65 @@ public class ChangePasswordModelImpl implements ChangePasswordModel {
 	 */
 	/**a）
 　　　　e）パスワード履歴テーブルを社員IDで検索し、パスワードのリストを取得する。
-パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する	 */
-//	public String checkPassHistory (String employeeId) {
-//
-//		TPasswordHistory tPasswordHistory = tPassHistory.selectByPrimaryKey(employeeId);
-//
-////		// 現パスワードを取得
-//		String currentPass = mUserInfo.getPassword();
-//
-//		return currentPass;
-//	}
+パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する	
++-------------+--------+------------+------------+
+| EMPLOYEE_ID | RENBAN | PASSWORD   | HASH_COUNT |
++-------------+--------+------------+------------+
+| 9999999999  |      1 | 9999999990 |          1 |
+| 9999999999  |      2 | 9999999991 |          1 |
++-------------+--------+------------+------------+
++-------------+------------+------+-----+---------+-------+
+| Field       | Type       | Null | Key | Default | Extra |
++-------------+------------+------+-----+---------+-------+
+| EMPLOYEE_ID | char(10)   | NO   | PRI | NULL    |       |
+| RENBAN      | bigint(20) | NO   | PRI | NULL    |       |
+| PASSWORD    | text       | YES  |     | NULL    |       |
+| HASH_COUNT  | int(11)    | YES  |     | NULL    |       |
++-------------+------------+------+-----+---------+-------+
+employeeIdを取り出す
+＜とか＝
+createCriteria調べる
+mybatisの自動生成もう一度
+ */
+	public boolean checkPassHistory (String employeeId) {
+	    Long renban = (long) 1;
+
+		TPasswordHistoryExample tPasswordHistoryExample = new TPasswordHistoryExample();
+		
+//		String joken = "EMPLOYEE_ID = " + employeeId;
+		
+		Criteria criteria = tPasswordHistoryExample.createCriteria();
+		criteria.andEmployeeIdEqualTo(employeeId);
+		
+		List tPassList = tPassHistory.selectByExampleWithBLOBs(tPasswordHistoryExample);
+
+//		// 現パスワードを取得
+		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
+		String currentPass = mUserInfo.getPassword();
+
+//		TPasswordHistoryExampleb tPasswordHistoryExample = PassList.get(i);
+		
+		for (int i = 0; i < tPassList.size(); i++) {
+			
+//			TPasswordHistory tPasswordHistory = (TPasswordHistory)tPassList().get(i);
+
+			String bPass = ((MUserWithBLOBs) tPassList.get(i)).getPassword();
+//			String bPass = tPassList.get(i).getPassword(2);
+//			String bPass = tPasswordHistory.getPassword();
+
+//			// 過去のパスワードを取得
+//			TPasswordHistoryExampleb tPasswordHistoryExample = PassList.get(i);
+				if (bPass != null) {
+					
+					if (currentPass.equals(bPass)) {
+						return false;
+						
+					}
+				}
+			
+			}
+
+		return true;
+	}
 
 }

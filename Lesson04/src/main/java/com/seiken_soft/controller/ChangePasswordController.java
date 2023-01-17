@@ -69,7 +69,7 @@ public class ChangePasswordController {
 +-------------+------------+------------+------------+------------------+------------+-------------+----------+------------+
 
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView init(ModelAndView mav) {
 
 
@@ -87,7 +87,7 @@ public class ChangePasswordController {
 		// 新パスワード（確認）
 		String newPassKknn = "";
 		// ハッシュ化回数
-		int HashCount = 0;
+		int hashCount = 0;
 
 
 		// 初期値は空欄を表示	99999の削除フラグ9にもどしてためすこと！
@@ -99,7 +99,7 @@ public class ChangePasswordController {
 
 		changePasswordForm.setNewPassKknn(newPassKknn);
 
-		changePasswordForm.setHashCount(HashCount);
+		changePasswordForm.setHashCount(hashCount);
 		
 		mav.addObject("changePasswordForm", changePasswordForm);
 		mav.setViewName("changePassword");
@@ -122,7 +122,7 @@ public class ChangePasswordController {
 		// 新パスワード（確認）
 		String newPassKknn = form.getNewPassKknn();
 		// ハッシュ化回数
-		int HashCount = form.getHashCount();
+		int hashCount = form.getHashCount();
 		
 //		①aと②c新パスワードと新パスワード（確認）の内容が一致しない場合はエラーメッセージを表示する
 		if (!newPass.equals(newPassKknn)) {			
@@ -136,14 +136,21 @@ public class ChangePasswordController {
 		String delFlg = changePasswordModel.getDelFlg(employeeId);
 		// 社員IDで検索し現パスワードを取得する
 		String dbCurrentPass = changePasswordModel.getCurrentPass(employeeId);
+		
+		// 取得した現パスワードをハッシュ化回数分ハッシュ化する
+		String hashDbCurrentPass = changePasswordModel.getHashStr(dbCurrentPass, hashCount);
+		System.out.println(hashDbCurrentPass); 
 
 		// パスワード変更可否フラグ
 		boolean changeFlg = false;
 		
 
 		if (delFlg.equals("9")) {
-			
+//			３）　新パスワードの内容をハッシュ化回数分だけハッシュ化し、ユーザーマスタのパスワードを更新する。
+//			　　　その際、削除フラグが「9：初期フラグ」の場合は削除フラグを「0：未削除」に更新する
+
 				changeFlg = true;
+				changePasswordModel.delFlgZero(employeeId);
 			
 		} else if (delFlg.equals("0")) {
 
@@ -169,15 +176,23 @@ public class ChangePasswordController {
 			
 			/**a）
 		　　　　e）パスワード履歴テーブルを社員IDで検索し、パスワードのリストを取得する。
-		パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する	 */
-			
+		パスワードのリストが新パスワードと一致する場合はエラーメッセージを表示する
+		mysql> SELECT * FROM T_Password_History;
++-------------+--------+------------+------------+
+| EMPLOYEE_ID | RENBAN | PASSWORD   | HASH_COUNT |
++-------------+--------+------------+------------+
+| 9999999999  |      1 | 9999999990 |          1 |
++-------------+--------+------------+------------+
+	 */
+
+			changePasswordModel.checkPassHistory(employeeId);
 			
 			
 //			
-//		        mav.addObject("msg", "アカウントがロックされています。システム担当部署へご確認ください");
-//				mav.addObject("loginForm", form);
-//				mav.setViewName("login");
-//				return mav;
+		        mav.addObject("msg", "新パスワードは、過去に使用したことがあります。違うパスワードを新パスワードにしてください。");
+				mav.addObject("changePasswordForm", form);
+				mav.setViewName("changePassword");
+				return mav;
 		}
 		
 

@@ -189,7 +189,7 @@ public class LoginController {
 //	        mav.addObject("password");
 
 //			２回目以降はパスワード変更する必要がないので、削除フラグを0にする
-			loginModel.delFlgZero(employeeId);
+//			loginModel.delFlgZero(employeeId);
 			
 			return mav;
 		} else if (deleteFlg.equals("1")) {

@@ -19,7 +19,7 @@ public class ChangePasswordForm {
 	// 新パスワード（確認）
 	private String newPassKknn;
 	// ハッシュ化回数
-	private int HashCount;
+	private int hashCount;
 
 	/**
 	 * 社員IDの取得
@@ -83,14 +83,14 @@ public class ChangePasswordForm {
 	 * @return hashCount
 	 */
 	public int getHashCount() {
-		return HashCount;
+		return hashCount;
 	}
 
 	/**
 	 * @param hashCount セットする hashCount
 	 */
 	public void setHashCount(int hashCount) {
-		HashCount = hashCount;
+		this.hashCount = hashCount;
 	}
 
 }
