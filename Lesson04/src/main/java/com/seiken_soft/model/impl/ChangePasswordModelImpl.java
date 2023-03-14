@@ -13,6 +13,7 @@ import com.seiken_soft.dao.TPasswordHistoryMapper;
 import com.seiken_soft.entity.MUserWithBLOBs;
 import com.seiken_soft.entity.TPasswordHistoryExample;
 import com.seiken_soft.entity.TPasswordHistoryExample.Criteria;
+import com.seiken_soft.entity.TPasswordHistoryWithBLOBs;
 import com.seiken_soft.model.ChangePasswordModel;
 
 @Transactional
@@ -111,6 +112,19 @@ public class ChangePasswordModelImpl implements ChangePasswordModel {
 		return reStr;
 	}
 	
+
+	public void updatePass (String employeeId) {
+
+		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);
+
+//		// DBアップデート
+//		// ロックフラグを1（ロック済み）にする
+		mUserInfo.setPassword("1");
+//		mUserInfo.retryCount = retryCount + 1;		
+		userInfo.updateByPrimaryKey(mUserInfo);
+
+	}
+	
 	
 
 //	// 削除フラグを0（未ロック）にする
@@ -158,6 +172,7 @@ mybatisの自動生成もう一度
 	    Long renban = (long) 1;
 
 		TPasswordHistoryExample tPasswordHistoryExample = new TPasswordHistoryExample();
+		TPasswordHistoryWithBLOBs tPasswordHistoryWithBLOBs = new TPasswordHistoryWithBLOBs();
 		
 //		String joken = "EMPLOYEE_ID = " + employeeId;
 		
@@ -173,10 +188,10 @@ mybatisの自動生成もう一度
 //		TPasswordHistoryExampleb tPasswordHistoryExample = PassList.get(i);
 		
 		for (int i = 0; i < tPassList.size(); i++) {
-			
 //			TPasswordHistory tPasswordHistory = (TPasswordHistory)tPassList().get(i);
 
-			String bPass = ((MUserWithBLOBs) tPassList.get(i)).getPassword();
+//			String bPass = tPassList.get(i).getPassword;
+			String bPass = ((TPasswordHistoryWithBLOBs) tPassList.get(i)).getPassword();
 //			String bPass = tPassList.get(i).getPassword(2);
 //			String bPass = tPasswordHistory.getPassword();
 

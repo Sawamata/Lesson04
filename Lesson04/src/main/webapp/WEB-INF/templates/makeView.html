@@ -7,8 +7,28 @@
 
     </head>
     <body style="text-align: center;">
+  <div class="container">
              
+		<div class="center-block">
         <h1 class="m-3">ルーム一覧画面</h1>
+		</div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ルームナンバー</th>
+          <th>ルーム名</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="align-middle">
+          <td></td>
+          <td></td>
+          <td><a th:href="@{/user/{id}(id=*{id})}" class="btn btn-secondary">入室</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
     
     </body>
 </html>

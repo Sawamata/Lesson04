@@ -142,17 +142,9 @@ public class ChangePasswordController {
 		System.out.println(hashDbCurrentPass); 
 
 		// パスワード変更可否フラグ
-		boolean changeFlg = false;
+//		boolean changeFlg = false;
 		
-
-		if (delFlg.equals("9")) {
-//			３）　新パスワードの内容をハッシュ化回数分だけハッシュ化し、ユーザーマスタのパスワードを更新する。
-//			　　　その際、削除フラグが「9：初期フラグ」の場合は削除フラグを「0：未削除」に更新する
-
-				changeFlg = true;
-				changePasswordModel.delFlgZero(employeeId);
-			
-		} else if (delFlg.equals("0")) {
+if (delFlg.equals("0")) {
 
 			if (!dbCurrentPass.equals(currentPass)) {
 //				a取得したパスワードと現パスワードの内容が一致しない場合はエラーメッセージを表示する
@@ -166,10 +158,6 @@ public class ChangePasswordController {
 				mav.addObject("changePasswordForm", form);
 				mav.setViewName("changePassword");
 				return mav;
-				
-			} else {
-			
-				changeFlg = true;
 				
 			}
 			
@@ -185,15 +173,43 @@ public class ChangePasswordController {
 +-------------+--------+------------+------------+
 	 */
 
-			changePasswordModel.checkPassHistory(employeeId);
-			
-			
-//			
+			// 過去に使用したことのあるパスワードかどうかのチェック
+			if (changePasswordModel.checkPassHistory(employeeId)) {
+				// 過去に使用したことがない場合
+				// 新パスワードの内容をハッシュ化回数分だけハッシュ化
+				String hashNewPass = changePasswordModel.getHashStr(newPass, hashCount);
+
+				// ユーザーマスタのパスワードを更新
+				changePasswordModel.updatePass(hashNewPass);
+
+				if (delFlg.equals("9")) {
+					// 削除フラグが「9：初期フラグ」の場合は削除フラグを「0：未削除」に更新する
+
+						changePasswordModel.delFlgZero(employeeId);
+//						　　　またパスワード履歴テーブルに社員ID、連番＋１の値、ハッシュ化した新パスワードで登録する。
+
+				        mav.addObject("msg", "パスワードを変更しました。");
+				} 
+				
+			} else {
+				// 過去に使用したことがある場合
 		        mav.addObject("msg", "新パスワードは、過去に使用したことがあります。違うパスワードを新パスワードにしてください。");
 				mav.addObject("changePasswordForm", form);
 				mav.setViewName("changePassword");
 				return mav;
+				
+			};
+			
+			
+//			
 		}
+		/**３）　２）①と２）②でエラーとならなかった場合、新パスワードの内容をハッシュ化回数分だけハッシュ化し、
+		 * ユーザーマスタのパスワードを更新する。
+		　　　その際、削除フラグが「9：初期フラグ」の場合は削除フラグを「0：未削除」に更新する
+		　　　またパスワード履歴テーブルに社員ID、連番＋１の値、ハッシュ化した新パスワードで登録する。
+		４）メニュー画面を作成し、ルーム作成ボタン、ルーム一覧ボタン、パスワード変更ボタンを配置する
+	 */
+
 		
 
 

@@ -82,13 +82,13 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="com.seiken_soft.entity.TRoomKey" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_room
     where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="com.seiken_soft.entity.TRoomKey">
     delete from t_room
     where ROOM_NUMBER = #{roomNumber,jdbcType=CHAR}
   </delete>

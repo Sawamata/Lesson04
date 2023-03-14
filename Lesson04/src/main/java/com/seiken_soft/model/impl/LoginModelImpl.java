@@ -113,12 +113,12 @@ public class LoginModelImpl implements LoginModel {
 	}
 	public void userUnlock (String employeeId) {
 
-		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);		
+		MUserWithBLOBs mUserInfo = userInfo.selectByPrimaryKey(employeeId);	
 
 //		// DBアップデート
 //		// ロックフラグを0（未ロック）にする
 		mUserInfo.setLockFlg("0");
-//		mUserInfo.retryCount = retryCount + 1;		
+//		mUserInfo.retryCount = retryCount + 1;
 		userInfo.updateByPrimaryKey(mUserInfo);
 
 	}

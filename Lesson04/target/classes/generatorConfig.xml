@@ -6,7 +6,7 @@
 <generatorConfiguration>
 
   <!-- <context id="MySQL" targetRuntime="MyBatis3"> -->
-  <context id="MySQL" targetRuntime="MyBatis3">
+  <context id="MySQL" defaultModelType="hierarchical" targetRuntime="MyBatis3">
 
     <!-- コメント -->
     <commentGenerator>

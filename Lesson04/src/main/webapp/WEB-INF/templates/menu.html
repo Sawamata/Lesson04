@@ -4,11 +4,25 @@
         <meta charset="UTF-8" />
          <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}">
     <title>メニュー画面</title>
+    <script src="http://localhost:8080/Lesson04/js/menu.js?dateTime=20220921120051" ></script>
 
     </head>
     <body style="text-align: center;">
              
         <h1 class="m-3">メニュー画面</h1>
+        <hr>
+        
+    <form th:object="${menuForm}" th:action="@{/menu}" method="post">
+    	<div class="d-grid gap-2">
+          <button type="button" class="btn btn-primary btn-lg" id="ptMakeRoomBtn" name="ptMakeRoomBtn" onclick="ptMakeRoom();">ルーム作成</button>
+          <button class="btn btn-primary btn-lg">ルーム一覧</button>
+          <button class="btn btn-primary btn-lg">パスワード変更</button>
+          </div>
+          
+          
+            <!-- エラーメッセージの一覧表示 -->
+            <p class="text-danger mt-2" th:text="${msg}"></p>
+    </form>
     
     </body>
 </html>
