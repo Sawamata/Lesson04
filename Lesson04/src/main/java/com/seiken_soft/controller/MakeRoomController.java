@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.seiken_soft.entity.MEmployee;
+import com.seiken_soft.entity.TRoom;
+import com.seiken_soft.entity.TRoomplus;
 import com.seiken_soft.form.MakeRoomForm;
 import com.seiken_soft.model.impl.LoginModelImpl;
 import com.seiken_soft.model.impl.MakeRoomModelImpl;
+import com.seiken_soft.model.impl.RoomViewModelImpl;
 
 /**
  *
@@ -35,6 +38,11 @@ public class MakeRoomController {
 	@Qualifier("loginModelImpl")
 
 	private LoginModelImpl loginModel;
+	
+	@Autowired
+	@Qualifier("roomViewModelImpl")
+
+	private RoomViewModelImpl roomViewModelImpl;
 
 	/**
 	 * ログインボタン押下時
@@ -164,7 +172,58 @@ public class MakeRoomController {
 //		　　　ルームテーブル・ルームメンバーテーブルに情報登録する
 		makeRoomModel.makeRecordRoomAndRoomMenber(roomNameId, idList, nameList);
 		
-			mav.addObject("makeRoomForm", form);
+
+//		ルーム一覧を配置し、ルームナンバー、ルーム名、入室ボタンを配置する（ルームテーブルの行数分）
+//		ルームテーブル取得
+		List<TRoom>  tableList = roomViewModelImpl.selectAllRoomTable();
+		System.out.println(tableList.size());
+		
+		
+
+		// 入室ボタン表示判定フラグリスト
+		List<TRoomplus> tRoomplusList = new ArrayList<>();
+
+		for (int i = 0; i < tableList.size(); i++) {
+				TRoom tRoombean = tableList.get(i);
+				String lockFlg =tRoombean.getLockFlg();
+				String roomNumber =tRoombean.getRoomNumber();
+				String roomName =tRoombean.getRoomName();
+				TRoomplus tRoomplus = new TRoomplus();
+				
+				tRoomplus.setLockFlg(lockFlg);
+				tRoomplus.setRoomNumber(roomNumber);
+				tRoomplus.setRoomName(roomName);
+				
+				if (lockFlg.equals("1")) {
+//					３）ルームテーブルのロックフラグが「１：ロック済」の場合は、入室ボタンを非活性にする
+	//				1 非活性をセット
+					tRoomplus.setNyushitsuButtonHyojiFlg("1");
+				} else {
+	//				３）入室ボタンはルームメンバーテーブルにログインユーザーが未登録の場合は非表示とする
+	//				roommember.insert(updateInfoTRoommember);
+	
+					if (roomViewModelImpl.checkLoginUser(tRoombean.getRoomNumber())) {
+						//	0 表示をセット
+						tRoomplus.setNyushitsuButtonHyojiFlg("0");
+	
+					} else {
+	//					2 非表示をセット
+						tRoomplus.setNyushitsuButtonHyojiFlg("2");
+
+					}
+					
+				}
+				tRoomplusList.add(tRoomplus);
+			}
+		
+		
+		
+		
+		
+
+		mav.addObject("tRoomList", tRoomplusList);
+//		mav.addObject("buttonList", nyushitsuButtonHyojiList);
+//			mav.addObject("makeRoomForm", form);
 //			mav.setViewName("makeRoom");
 			mav.setViewName("makeView");
 			return mav;

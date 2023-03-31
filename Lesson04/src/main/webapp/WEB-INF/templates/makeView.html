@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
          <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}">
     <title>ルーム一覧画面</title>
+    <script src="http://localhost:8080/Lesson04/js/makeView.js?dateTime=20220921120060" ></script>
 
     </head>
     <body style="text-align: center;">
@@ -12,6 +13,7 @@
 		<div class="center-block">
         <h1 class="m-3">ルーム一覧画面</h1>
 		</div>
+		<form method="post" th:action="@{/roomView/checkin}" th:object="${tRoom}">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -21,13 +23,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="align-middle">
+        <tr th:each="tRoom : ${tRoomList}" class="align-middle">
+          <td th:text="${tRoom.roomNumber}"></td>
+          <td th:text="${tRoom.roomName}"></td>
+    	<th:block th:if="${tRoom.nyushitsuButtonHyojiFlg == '0'}">
+          <td><button type="submit" name="nyushitsuBtn" th:value="${tRoom.roomNumber}" class="btn btn-primary">入室</button></td>
+          </th:block>
+    	<th:block th:if="${tRoom.nyushitsuButtonHyojiFlg == '1'}">
+          <td><a class="btn btn-secondary">入室</a></td>
+          </th:block>
+    	<th:block th:if="${tRoom.nyushitsuButtonHyojiFlg == '2'}">
           <td></td>
-          <td></td>
-          <td><a th:href="@{/user/{id}(id=*{id})}" class="btn btn-secondary">入室</a></td>
+          </th:block>
         </tr>
       </tbody>
     </table>
+    </form>>
   </div>
     
     </body>
